@@ -24,5 +24,24 @@ export const fetchAuthorDetail = authorID => {
 
 //POST THE BOOK TO https://the-index-api.herokuapp.com/api/books/
 export const postBook = (book, author, closeModal) => {
-  alert("I DON'T DO ANYTHING YET!");
+  return async dispatch => {
+    try {
+      const newBook = {
+        ...book,
+        authors: [author.id]
+      };
+      const res = await instance.post("/api/books/", newBook);
+      const bookData = res.data;
+      dispatch({
+        type: actionTypes.POST_BOOK,
+        payload: bookData
+      });
+      closeModal();
+    } catch (err) {
+      dispatch({
+        type: actionTypes.SET_ERRORS,
+        payload: err.response.data
+      });
+    }
+  };
 };
